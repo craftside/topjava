@@ -19,7 +19,13 @@ import static java.util.stream.Collectors.toList;
 public class MealsUtil {
     private static final int DEFAULT_CALORIES_PER_DAY = 2000;
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
+    private static  List<MealTo> mealsTo;
+
+    public static List<MealTo> getMealsTo() {
+        return mealsTo;
+    }
+
+    public static void init() throws ExecutionException, InterruptedException {
         List<Meal> meals = Arrays.asList(
                 new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
                 new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
@@ -31,7 +37,7 @@ public class MealsUtil {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(12, 0);
 
-        List<MealTo> mealsTo = getFiltered(meals, startTime, endTime, DEFAULT_CALORIES_PER_DAY);
+        mealsTo = getFiltered(meals, LocalTime.MIN, LocalTime.MAX, DEFAULT_CALORIES_PER_DAY);
         mealsTo.forEach(System.out::println);
 
         System.out.println(getFilteredByCycle(meals, startTime, endTime, DEFAULT_CALORIES_PER_DAY));
