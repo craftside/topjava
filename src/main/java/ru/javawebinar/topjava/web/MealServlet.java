@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.web;
 
+import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
 import ru.javawebinar.topjava.util.DateTimeFormatterUtil;
@@ -19,7 +20,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class MealServlet extends HttpServlet {
+    private static final Logger log = getLogger(MealServlet.class);
 
     private static final int DEFAULT_CALORIES_PER_DAY = 2000;
 
@@ -38,8 +42,13 @@ public class MealServlet extends HttpServlet {
 
         DateTimeFormatter formatter = DateTimeFormatterUtil.getFormatter();
 
+        log.debug("set mealsTo to request attribute");
         request.setAttribute("mealsTo", mealsTo);
+
+        log.debug("set formatter to request attribute");
         request.setAttribute("formatter", formatter);
+
+        log.debug("forward to meals jsp");
         request.getRequestDispatcher("meals.jsp").forward(request, response);
 
 //        response.sendRedirect("meals.jsp");
