@@ -25,18 +25,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
 
-    private static final int DEFAULT_CALORIES_PER_DAY = 2000;
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        try {
-            MealsUtil.init();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        MealsUtil.init();
 
         List<MealTo> mealsTo = MealsUtil.getMealsTo();
 
