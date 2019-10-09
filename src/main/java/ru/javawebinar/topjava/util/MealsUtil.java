@@ -2,6 +2,8 @@ package ru.javawebinar.topjava.util;
 
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
+import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.service.impl.MealServiceImpl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,25 +24,10 @@ public class MealsUtil {
     private static  List<MealTo> mealsTo;
 
     public static List<MealTo> getMealsTo() {
+        mealsTo = getFiltered(MealServiceImpl.getDb(), LocalTime.MIN, LocalTime.MAX, DEFAULT_CALORIES_PER_DAY);
         return mealsTo;
     }
 
-    public static void init() {
-        List<Meal> meals = Arrays.asList(
-                new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
-                new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
-                new Meal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
-                new Meal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000),
-                new Meal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
-                new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
-        );
-        LocalTime startTime = LocalTime.of(7, 0);
-        LocalTime endTime = LocalTime.of(12, 0);
-
-        mealsTo = getFiltered(meals, LocalTime.MIN, LocalTime.MAX, DEFAULT_CALORIES_PER_DAY);
-        // mealsTo.forEach(System.out::println);
-
-    }
 
     public static List<MealTo> getFiltered(List<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
@@ -55,6 +42,7 @@ public class MealsUtil {
     }
 
     private static MealTo createTo(Meal meal, boolean excess) {
-        return new MealTo(meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
+        return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
+
 }

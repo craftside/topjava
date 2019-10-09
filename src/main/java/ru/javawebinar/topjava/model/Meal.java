@@ -1,10 +1,15 @@
 package ru.javawebinar.topjava.model;
 
+import ru.javawebinar.topjava.service.impl.Counter;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Meal {
+    private int id;
+
     private final LocalDateTime dateTime;
 
     private final String description;
@@ -12,9 +17,14 @@ public class Meal {
     private final int calories;
 
     public Meal(LocalDateTime dateTime, String description, int calories) {
+        id = Counter.getId();
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public LocalDateTime getDateTime() {
