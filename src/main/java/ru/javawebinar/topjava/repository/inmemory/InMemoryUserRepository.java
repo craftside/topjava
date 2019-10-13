@@ -7,6 +7,7 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.util.UsersUtil;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -22,21 +23,10 @@ public class InMemoryUserRepository implements UserRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        this.save( new User(counter.incrementAndGet(),
-                "Admin",
-                "admin@mail.ru",
-                "123",
-                MealsUtil.DEFAULT_CALORIES_PER_DAY,
-                true,
-                Collections.singleton(Role.ROLE_ADMIN)));
+        for (User user: UsersUtil.USERS) {
+            this.save(user);
+        }
 
-        this.save( new User(counter.incrementAndGet(),
-                "FirstUser",
-                "first@mail.ru",
-                "456",
-                MealsUtil.DEFAULT_CALORIES_PER_DAY,
-                true,
-                Collections.singleton(Role.ROLE_USER)));
     }
 
     @Override
