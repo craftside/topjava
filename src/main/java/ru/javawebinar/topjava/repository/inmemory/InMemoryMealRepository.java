@@ -17,16 +17,29 @@ public class InMemoryMealRepository implements MealRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        for (Meal meal: MealsUtil.MEALS) {
-            this.save(meal, UsersUtil.USERS.get(1));
+        //for (Meal meal: MealsUtil.MEALS) {
+        this.save(MealsUtil.MEALS.get(0), UsersUtil.USERS.get(0));
+        this.save(MealsUtil.MEALS.get(1), UsersUtil.USERS.get(0));
+        this.save(MealsUtil.MEALS.get(2), UsersUtil.USERS.get(0));
+        this.save(MealsUtil.MEALS.get(3), UsersUtil.USERS.get(0));
+        this.save(MealsUtil.MEALS.get(4), UsersUtil.USERS.get(0));
+        this.save(MealsUtil.MEALS.get(5), UsersUtil.USERS.get(0));
 
-        }
+        this.save(MealsUtil.MEALS.get(6), UsersUtil.USERS.get(1));
+        this.save(MealsUtil.MEALS.get(7), UsersUtil.USERS.get(1));
+        this.save(MealsUtil.MEALS.get(8), UsersUtil.USERS.get(1));
+        this.save(MealsUtil.MEALS.get(9), UsersUtil.USERS.get(2));
+        this.save(MealsUtil.MEALS.get(10), UsersUtil.USERS.get(2));
+        this.save(MealsUtil.MEALS.get(11), UsersUtil.USERS.get(2));
+
+        //}
     }
 
     @Override
     public Meal save(Meal meal, User user) {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
+            meal.setUserId(user.getId());
             repository.put(meal.getId(), meal);
             return meal;
         }
@@ -51,10 +64,11 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Map<Integer, Meal> getMealByUser(User user) {
-        Map<Integer, Meal> subRepository = null;
+        // create non-null
+        Map<Integer, Meal> subRepository = new ConcurrentHashMap<>();;
 
         for (Map.Entry<Integer, Meal> entry : repository.entrySet()) {
-            if (entry.getValue().getUserId() == user.getId()) {
+            if (entry.getValue().getUserId() == (int) user.getId()) {
                 subRepository.put(entry.getKey(), entry.getValue());
             }
         }
