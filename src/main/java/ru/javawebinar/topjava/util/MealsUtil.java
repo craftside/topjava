@@ -19,20 +19,20 @@ public class MealsUtil {
 
     // userId is changed InMemoryMealRepository.init()
     public static final List<Meal> MEALS = Arrays.asList(
-            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500, 1),
-            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000, 1),
-            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500, 1),
-            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000, 1),
-            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500, 1),
-            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510, 1),
+            new Meal(1, LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500, 2),
+            new Meal(2, LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000, 2),
+            new Meal(3, LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500, 2),
+            new Meal(4, LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000, 2),
+            new Meal(5, LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500, 2),
+            new Meal(6, LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510, 2),
 
-            new Meal(LocalDateTime.of(2015, Month.MAY, 1, 10, 0), "Завтрак юзвера1", 1000, 1),
-            new Meal(LocalDateTime.of(2015, Month.MAY, 1, 13, 0), "Обед юзвера1", 500, 1),
-            new Meal(LocalDateTime.of(2015, Month.MAY, 1, 20, 0), "Ужин юзвера1", 510, 1),
+            new Meal(7, LocalDateTime.of(2015, Month.MAY, 1, 10, 0), "Завтрак юзвера1", 1000, 2),
+            new Meal(8, LocalDateTime.of(2015, Month.MAY, 1, 13, 0), "Обед юзвера1", 500, 2),
+            new Meal(9, LocalDateTime.of(2015, Month.MAY, 1, 20, 0), "Ужин юзвера1", 510, 2),
 
-            new Meal(LocalDateTime.of(2015, Month.MAY, 1, 10, 0), "Завтрак юзвера2", 1000, 1),
-            new Meal(LocalDateTime.of(2015, Month.MAY, 1, 13, 0), "Обед юзвера2", 500, 1),
-            new Meal(LocalDateTime.of(2015, Month.MAY, 1, 20, 0), "Ужин юзвера2", 510, 1)
+            new Meal(10, LocalDateTime.of(2015, Month.MAY, 1, 10, 0), "Завтрак юзвера2", 1000, 3),
+            new Meal(11, LocalDateTime.of(2015, Month.MAY, 1, 13, 0), "Обед юзвера2", 500, 3),
+            new Meal(12, LocalDateTime.of(2015, Month.MAY, 1, 20, 0), "Ужин юзвера2", 510, 3)
 
     );
 

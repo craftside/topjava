@@ -19,13 +19,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class InMemoryUserRepository implements UserRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepository.class);
 
-    private Map<Integer, User> repository = new ConcurrentHashMap<Integer, User>();
-    private AtomicInteger counter = new AtomicInteger(0);
+    private Map<Integer, User> repository = new ConcurrentHashMap<Integer, User>() {{
+        put(1, UsersUtil.USERS.get(0));
+        put(2, UsersUtil.USERS.get(1));
+        put(3, UsersUtil.USERS.get(2));
+    }};
+    private AtomicInteger counter = new AtomicInteger(3);
+
+    public InMemoryUserRepository() {
+//        for (User user: UsersUtil.USERS) {
+//            this.save(user);
+//        }
+    }
 
     {
-        for (User user: UsersUtil.USERS) {
-            this.save(user);
-        }
+
 
     }
 
