@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.util.UsersUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletConfig;
@@ -18,6 +20,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 public class MealServlet extends HttpServlet {
@@ -57,6 +60,16 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<User> users = Arrays.asList(UsersUtil.USERS.get(0), UsersUtil.USERS.get(1));
+        request.setAttribute("users", users);
+
+
+        String userParameter = request.getParameter("user");
+        if (userParameter != null) {
+            SecurityUtil.setUserId( Integer.valueOf(userParameter));
+        }
+        request.setAttribute("authUser", SecurityUtil.authUserId());
+
         String action = request.getParameter("action");
 
         switch (action == null ? "all" : action) {

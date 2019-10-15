@@ -23,6 +23,17 @@
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>
     <br><br>
+    Текущий user id: ${authUser}
+    <br><br>
+    <form action="meals">
+    <select name="user">
+        <c:forEach items="${users}" var="user">
+            <option value="${user.id}"><c:out value="${user.name}" /></option>
+        </c:forEach>
+    </select>
+    <input type="submit" value="Submit">
+    </form>
+    <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>
