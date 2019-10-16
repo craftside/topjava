@@ -17,6 +17,4 @@ public interface MealRepository {
     Meal get(int id, int userId);
 
     Collection<Meal> getAll(int userId);
-
-    Map<Integer, Meal> getMealByUser(int userId);
 }

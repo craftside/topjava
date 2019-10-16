@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class InMemoryMealRepository implements MealRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryMealRepository.class);
 
-    private Map<Integer, Meal> repository = new ConcurrentHashMap<Integer, Meal>();
+    private Map<Integer, ConcurrentHashMap<Integer, Meal>> mealRepository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
     public InMemoryMealRepository() {
@@ -38,50 +38,36 @@ public class InMemoryMealRepository implements MealRepository {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             meal.setUserId(userId);
-            repository.put(meal.getId(), meal);
+            if (mealRepository.containsKey(userId)) {
+                mealRepository.get(userId).put(meal.getId(), meal);
+            } else {
+                mealRepository.put(userId, new ConcurrentHashMap<>());
+                mealRepository.get(userId).put(meal.getId(), meal);
+            }
+
             log.info("save {}", meal);
             return meal;
 
         }
-        // if user has that food so than we update it
-        if (getMealByUser(userId).containsKey(meal.getId())) {
-            return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
-        }
-        return null;
+            return mealRepository.get(userId).computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
 
     @Override
     public boolean delete(int id, int userId) {
-        if (getMealByUser(userId).containsKey(id)) {
-            return repository.remove(id) != null;
-        }
-        return false;
+        return mealRepository.get(userId).remove(id) != null;
 
     }
 
     @Override
     public Meal get(int id, int userId) {
-        return getMealByUser(userId).get(id);
+        return mealRepository.get(userId).get(id);
     }
 
     @Override
     public Collection<Meal> getAll(int userId) {
-        return getMealByUser(userId).values();
+        return mealRepository.get(userId).values();
     }
 
-    @Override
-    public Map<Integer, Meal> getMealByUser(int userId) {
-        // create non-null
-        Map<Integer, Meal> subRepository = new ConcurrentHashMap<>();
-
-        for (Map.Entry<Integer, Meal> entry : repository.entrySet()) {
-            if (entry.getValue().getUserId() == userId) {
-                subRepository.put(entry.getKey(), entry.getValue());
-            }
-        }
-        return subRepository;
-
-    }
 
 
 }
