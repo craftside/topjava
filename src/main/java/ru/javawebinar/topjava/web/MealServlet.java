@@ -72,7 +72,6 @@ public class MealServlet extends HttpServlet {
                 int id = getId(request);
                 log.info("Delete {}", id);
                 mealRestController.delete(id);
-//                mealRepository.delete(id, userRepository.get(user.getId()));
                 response.sendRedirect("meals");
                 break;
             case "create":
@@ -80,10 +79,6 @@ public class MealServlet extends HttpServlet {
                 final Meal meal = "create".equals(action) ?
                         new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
                         mealRestController.get(getId(request));
-//                final Meal meal = "create".equals(action) ?
-//                        mealRestController.create() : // снести
-//                        mealRestController.get(getId(request));
-
 
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
@@ -91,8 +86,6 @@ public class MealServlet extends HttpServlet {
             case "all":
             default:
                 log.info("getAll");
-//                request.setAttribute("meals",
-//                        MealsUtil.getTos(mealRepository.getAll(userRepository.get(user.getId())), MealsUtil.DEFAULT_CALORIES_PER_DAY));
                 Collection<Meal> collectionMeal = mealRestController.getAll();
                 request.setAttribute("meals",
                           MealsUtil.getTos(collectionMeal, MealsUtil.DEFAULT_CALORIES_PER_DAY));
