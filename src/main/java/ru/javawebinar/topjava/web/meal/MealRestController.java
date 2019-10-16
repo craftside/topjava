@@ -16,21 +16,17 @@ public class MealRestController {
     @Autowired
     private MealService mealService;
 
-    @Autowired
-    private UserService userService;
-
     public void delete(int id) {
         mealService.delete(id, SecurityUtil.authUserId());
     }
 
-    public Meal create() {
-
-        return null;
+    public Meal create(Meal meal, int userId) {
+        return mealService.create(meal, userId);
     }
 
     public Meal get(int id) {
 
-        return null;
+        return mealService.get(id, SecurityUtil.authUserId());
     }
 
     public Collection<Meal> getAll() {
@@ -39,6 +35,6 @@ public class MealRestController {
     }
 
     public void save(Meal meal) {
-
+        mealService.create(meal, SecurityUtil.authUserId());
     }
 }

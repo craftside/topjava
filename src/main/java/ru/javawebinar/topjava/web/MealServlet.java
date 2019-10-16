@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -36,6 +37,7 @@ public class MealServlet extends HttpServlet {
         try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml")) {
             System.out.println("Bean definition names: " + Arrays.toString(appCtx.getBeanDefinitionNames()));
             mealRestController = appCtx.getBean(MealRestController.class);
+            appCtx.close();
         }
 
     }
@@ -44,13 +46,16 @@ public class MealServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
-//        Integer userId = SecurityUtil.authUserId();
-//        User user = profileRestController.get();
+        // id whom saved meal
+        String userId = request.getParameter("userId");
+
+
 
         Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories"))
+                Integer.parseInt(request.getParameter("calories")),
+                userId.isEmpty() ? null : Integer.valueOf(userId)
         );
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
         //mealRepository.save(meal, userRepository.get(user.getId()));
@@ -60,16 +65,6 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<User> users = Arrays.asList(UsersUtil.USERS.get(0), UsersUtil.USERS.get(1));
-        request.setAttribute("users", users);
-
-
-        String userParameter = request.getParameter("user");
-        if (userParameter != null) {
-            SecurityUtil.setUserId( Integer.valueOf(userParameter));
-        }
-        request.setAttribute("authUser", SecurityUtil.authUserId());
-
         String action = request.getParameter("action");
 
         switch (action == null ? "all" : action) {
@@ -82,12 +77,12 @@ public class MealServlet extends HttpServlet {
                 break;
             case "create":
             case "update":
-//                final Meal meal = "create".equals(action) ?
-//                        new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000, user.getId()) :
-//                        mealRepository.get(getId(request), userRepository.get(user.getId()));
                 final Meal meal = "create".equals(action) ?
-                        mealRestController.create() :
+                        new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
                         mealRestController.get(getId(request));
+//                final Meal meal = "create".equals(action) ?
+//                        mealRestController.create() : // снести
+//                        mealRestController.get(getId(request));
 
 
                 request.setAttribute("meal", meal);

@@ -8,15 +8,15 @@ import java.util.Map;
 
 public interface MealRepository {
     // null if not found, when updated
-    Meal save(Meal meal, User user);
+    Meal save(Meal meal, int userId);
 
     // false if not found
-    boolean delete(int id, User user);
+    boolean delete(int id, int userId);
 
     // null if not found
-    Meal get(int id, User user);
+    Meal get(int id, int userId);
 
-    Collection<Meal> getAll(User user);
+    Collection<Meal> getAll(int userId);
 
-    Map<Integer, Meal> getMealByUser(User user);
+    Map<Integer, Meal> getMealByUser(int userId);
 }

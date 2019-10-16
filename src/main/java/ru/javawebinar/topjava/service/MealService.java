@@ -11,22 +11,32 @@ import java.util.Collection;
 @Service
 public class MealService {
 
-    @Autowired
-    private MealRepository mealRepository;
+    private final MealRepository mealRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-
-    public Collection<Meal> getAll(int userId) {
-
-        return mealRepository.getAll(userRepository.get(userId));
-
+    public MealService(MealRepository mealRepository) {
+        this.mealRepository = mealRepository;
     }
 
+    public Meal create(Meal meal, int userId) {
+        return mealRepository.save(meal, userId);
+    }
 
     public void delete(int mealId, int userId) {
-
-        mealRepository.delete(mealId, userRepository.get(userId));
+        mealRepository.delete(mealId, userId);
     }
+
+    public Meal get(int mealId, int userId) {
+        return mealRepository.get(mealId, userId);
+    }
+
+    public Collection<Meal> getAll(int userId) {
+        return mealRepository.getAll(userId);
+    }
+
+    public  void update(Meal meal, int userId) {
+        mealRepository.save(meal, userId);
+    }
+
+
 }

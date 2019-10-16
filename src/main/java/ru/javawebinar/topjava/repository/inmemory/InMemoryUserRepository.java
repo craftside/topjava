@@ -11,6 +11,7 @@ import ru.javawebinar.topjava.util.UsersUtil;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -19,22 +20,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class InMemoryUserRepository implements UserRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepository.class);
 
-    private Map<Integer, User> repository = new ConcurrentHashMap<Integer, User>() {{
-        put(1, UsersUtil.USERS.get(0));
-        put(2, UsersUtil.USERS.get(1));
-        put(3, UsersUtil.USERS.get(2));
-    }};
-    private AtomicInteger counter = new AtomicInteger(3);
+    private Map<Integer, User> repository = new ConcurrentHashMap<Integer, User>();
+    private AtomicInteger counter = new AtomicInteger(0);
 
     public InMemoryUserRepository() {
-//        for (User user: UsersUtil.USERS) {
-//            this.save(user);
-//        }
-    }
-
-    {
-
-
+        for (User user: UsersUtil.USERS) {
+            this.save(user);
+        }
     }
 
     @Override
@@ -45,14 +37,13 @@ public class InMemoryUserRepository implements UserRepository {
 
     @Override
     public User save(User user) {
-        log.info("save {}", user);
 
         if (user.isNew()) {
             user.setId(counter.incrementAndGet());
             repository.put(user.getId(), user);
+            log.info("save {}", user);
             return user;
         }
-        // update without saving
         return repository.computeIfPresent(user.getId(), (id, oldUser) -> user);
     }
 
@@ -63,16 +54,16 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public Collection<User> getAll() {
+    public List<User> getAll() {
         log.info("getAll");
-        return repository.values();
+        return (List<User>) repository.values();
     }
 
     @Override
     public User getByEmail(String email) {
         log.info("getByEmail {}", email);
         for (Map.Entry<Integer, User> entry : repository.entrySet()) {
-            if (entry.getValue().getEmail() == email) {
+            if (entry.getValue().getEmail().equals(email)) {
                 return entry.getValue();
             }
         }
