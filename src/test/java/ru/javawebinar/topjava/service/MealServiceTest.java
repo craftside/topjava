@@ -62,6 +62,14 @@ public class MealServiceTest {
 
     @Test
     public void update() {
+        Meal updated = new Meal(MealTestData.MEAL_LIST.get(0));
+        updated.setDescription("TestUpdate");
+        updated.setCalories(9999);
+        updated.setDateTime(LocalDateTime.now());
+        mealService.update(updated, SecurityUtil.authUserId());
+        MealTestData.assertMatch(mealService.get(MealTestData.MEAL_LIST.get(0).getId(), SecurityUtil.authUserId()),
+                updated);
+
     }
 
     @Test
