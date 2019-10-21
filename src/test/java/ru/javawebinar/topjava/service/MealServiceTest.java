@@ -107,12 +107,12 @@ public class MealServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void deleteNotFound() {
-        mealService.delete(MealTestData.MEAL_LIST.get(7).getId(), SecurityUtil.authUserId());
+        mealService.delete(MealTestData.MEAL_LIST.get(7).getId(), UserTestData.USER_ID);
     }
 
     @Test(expected = NotFoundException.class)
     public void getNotFound() {
-        mealService.get(MealTestData.MEAL_LIST.get(7).getId(), SecurityUtil.authUserId());
+        mealService.get(MealTestData.MEAL_LIST.get(7).getId(), UserTestData.USER_ID);
     }
 
     @Test(expected = NotFoundException.class)
@@ -122,7 +122,7 @@ public class MealServiceTest {
         updated.setCalories(1233);
         updated.setDateTime(LocalDateTime.now());
         mealService.update(updated, SecurityUtil.authUserId());
-        MealTestData.assertMatch(mealService.get(MealTestData.MEAL_LIST.get(0).getId(), SecurityUtil.authUserId()),
+        MealTestData.assertMatch(mealService.get(MealTestData.MEAL_LIST.get(7).getId(), UserTestData.USER_ID),
                 updated);
     }
 }
