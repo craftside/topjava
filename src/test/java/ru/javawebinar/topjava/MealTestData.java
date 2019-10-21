@@ -20,8 +20,10 @@ public class MealTestData {
             new Meal(MEAL_ID + 2, LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
             new Meal(MEAL_ID + 3, LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000),
             new Meal(MEAL_ID + 4, LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
-            new Meal(MEAL_ID + 5, LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
-    );;
+            new Meal(MEAL_ID + 5, LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510),
+            new Meal(MEAL_ID + 6, LocalDateTime.of(2015, 05, 31, 10, 0 ), "Завтрак юзвера 2",1000),
+            new Meal(MEAL_ID + 7, LocalDateTime.of(2015, 05, 31, 13, 0 ), "Обед юзвера 2",500)
+    );
 
     public static void assertMatch(Meal actual, Meal expected) {
         assertThat(actual).isEqualToComparingFieldByField(expected);

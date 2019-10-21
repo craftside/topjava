@@ -12,9 +12,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -39,6 +42,8 @@ public class MealServiceTest {
 
     @Test
     public void get() {
+        Meal actual = mealService.get(MealTestData.MEAL_LIST.get(0).getId(), SecurityUtil.authUserId());
+        MealTestData.assertMatch(actual, MealTestData.MEAL_LIST.get(0));
     }
 
     @Test
@@ -54,10 +59,24 @@ public class MealServiceTest {
 
     @Test
     public void getBetweenDates() {
+        List<Meal> actual = mealService.getBetweenDates(LocalDate.of(2015, 05, 30), LocalDate.of(2015, 05, 30), SecurityUtil.authUserId());
+        MealTestData.assertMatch(actual,
+                MealTestData.MEAL_LIST.get(2),
+                MealTestData.MEAL_LIST.get(1),
+                MealTestData.MEAL_LIST.get(0));
+
     }
 
     @Test
     public void getAll() {
+        List<Meal> mealList = mealService.getAll(SecurityUtil.authUserId());
+        MealTestData.assertMatch(mealList,
+                MealTestData.MEAL_LIST.get(5),
+                MealTestData.MEAL_LIST.get(4),
+                MealTestData.MEAL_LIST.get(3),
+                MealTestData.MEAL_LIST.get(2),
+                MealTestData.MEAL_LIST.get(1),
+                MealTestData.MEAL_LIST.get(0));
     }
 
     @Test
@@ -69,7 +88,6 @@ public class MealServiceTest {
         mealService.update(updated, SecurityUtil.authUserId());
         MealTestData.assertMatch(mealService.get(MealTestData.MEAL_LIST.get(0).getId(), SecurityUtil.authUserId()),
                 updated);
-
     }
 
     @Test
@@ -85,5 +103,26 @@ public class MealServiceTest {
                 MealTestData.MEAL_LIST.get(2),
                 MealTestData.MEAL_LIST.get(1),
                 MealTestData.MEAL_LIST.get(0));
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void deleteNotFound() {
+        mealService.delete(MealTestData.MEAL_LIST.get(7).getId(), SecurityUtil.authUserId());
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getNotFound() {
+        mealService.get(MealTestData.MEAL_LIST.get(7).getId(), SecurityUtil.authUserId());
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void updateNotFound() {
+        Meal updated = new Meal(MealTestData.MEAL_LIST.get(7));
+        updated.setDescription("TestUpdate2");
+        updated.setCalories(1233);
+        updated.setDateTime(LocalDateTime.now());
+        mealService.update(updated, SecurityUtil.authUserId());
+        MealTestData.assertMatch(mealService.get(MealTestData.MEAL_LIST.get(0).getId(), SecurityUtil.authUserId()),
+                updated);
     }
 }
