@@ -50,7 +50,7 @@ public class MealServiceTest {
         for(String str : JUnitStopWatch.getTests()) {
             System.out.println(str);
         }
-        System.out.println("Total time: " + JUnitStopWatch.getTotalTime());
+        System.out.println("Total time: " + JUnitStopWatch.getTotalTime() + " ms");
     }
 
     @Test
