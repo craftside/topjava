@@ -1,15 +1,13 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.event.annotation.AfterTestExecution;
-import org.springframework.test.context.event.annotation.AfterTestMethod;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -20,9 +18,8 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import javax.persistence.NoResultException;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.LinkedList;
-import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
@@ -35,6 +32,8 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
 
+    private static final Logger log = getLogger(MealServiceTest.class);
+
     @Autowired
     private MealService service;
 
@@ -46,11 +45,11 @@ public class MealServiceTest {
 
     @AfterClass
     public static void printLog() {
-        System.out.println("Total info: ");
+        String strOut = "\n";
         for(String str : JUnitStopWatch.getTests()) {
-            System.out.println(str);
+            strOut += str + "\n";
         }
-        System.out.println("Total time: " + JUnitStopWatch.getTotalTime() + " ms");
+        log.info(strOut);
     }
 
     @Test

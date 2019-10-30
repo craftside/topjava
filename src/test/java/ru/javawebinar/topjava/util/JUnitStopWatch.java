@@ -3,55 +3,37 @@ package ru.javawebinar.topjava.util;
 import org.junit.AssumptionViolatedException;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
+import org.slf4j.Logger;
+import ru.javawebinar.topjava.service.MealServiceTest;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class JUnitStopWatch extends Stopwatch {
-    private static List<String> tests = new LinkedList<>();
-    private static long totalTime = 0;
+import static org.slf4j.LoggerFactory.getLogger;
 
-    private static void logInfo(Description description, String status, long nanos) {
+public class JUnitStopWatch extends Stopwatch {
+    private static final Logger log = getLogger(JUnitStopWatch.class);
+
+    private static List<String> tests = new LinkedList<String>(Collections.singleton("Method name        time, ms"));
+
+    private static void logInfo(Description description, long nanos) {
 
         String testName = description.getMethodName();
         long time = TimeUnit.NANOSECONDS.toMillis(nanos);
-        String str = String.format("Test %s %s, spent %d ms", testName, status, time);
+        String str = String.format("%-15s %6d ms", testName, time);
+
         tests.add(str);
-        totalTime += time;
-
-        System.out.println("\n");
-        System.out.println(str);
-        System.out.println("\n");
-
-
+        log.info("\n" + str);
     }
 
     public static List<String> getTests() {
         return tests;
     }
 
-    public static long getTotalTime() {
-        return totalTime;
-    }
-
     @Override
-    protected void succeeded(long nanos, Description description) {
-        logInfo(description, "succeeded", nanos);
+    protected void finished(long nanos, Description description) {
+        logInfo(description, nanos);
     }
-
-    @Override
-    protected void failed(long nanos, Throwable e, Description description) {
-        logInfo(description, "failed", nanos);
-    }
-
-    @Override
-    protected void skipped(long nanos, AssumptionViolatedException e, Description description) {
-        logInfo(description, "skipped", nanos);
-    }
-
-//    @Override
-//    protected void finished(long nanos, Description description) {
-//        logInfo(description, "finished", nanos);
-//    }
 }
