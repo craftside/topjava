@@ -8,10 +8,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Collection;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.*;
 
 import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
 
@@ -55,6 +52,20 @@ public class User extends AbstractNamedEntity {
     @Column(name = "calories_per_day", nullable = false, columnDefinition = "int default 2000")
     @Range(min = 10, max = 10000)
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
+
+//    @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
+//    private List<Meal> mealList;
+//
+//    public List<Meal> getMealList() {
+//        return mealList;
+//    }
+//
+//    public void setMealList(Meal meal) {
+//        this.mealList.add(meal);
+//        if (meal.getUser().getId() != this.getId()) {
+//            meal.setUser(this);
+//        }
+//    }
 
     public User() {
     }
