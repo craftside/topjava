@@ -11,6 +11,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.web.meal.MealController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
@@ -25,29 +26,31 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 @Controller
 @RequestMapping(value = "/meals")
-public class JspMealController {
+public class JspMealController extends MealController {
 
-    @Autowired
-    private MealService service;
+
 
     @RequestMapping(method = RequestMethod.GET)
     public String getMeals(Model model) {
-        int userId = SecurityUtil.authUserId();
-        model.addAttribute("meals", MealsUtil.getTos(service.getAll(userId), SecurityUtil.authUserCaloriesPerDay()));
+//        int userId = SecurityUtil.authUserId();
+//        model.addAttribute("meals", MealsUtil.getTos(service.getAll(userId), SecurityUtil.authUserCaloriesPerDay()));
+        model.addAttribute("meals", super.getAll());
         return "meals";
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public String delete(HttpServletRequest request) {
-        int userId = SecurityUtil.authUserId();
-        service.delete(getId(request), userId);
+//        int userId = SecurityUtil.authUserId();
+//        service.delete(getId(request), userId);
+        super.delete(getId(request));
         return "redirect:/meals";
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.GET)
     public String update(HttpServletRequest request, Model model) {
-        int userId = SecurityUtil.authUserId();
-        Meal meal = service.get(getId(request), userId);
+//        int userId = SecurityUtil.authUserId();
+//        Meal meal = service.get(getId(request), userId);
+        Meal meal = super.get(getId(request));
         model.addAttribute("meal", meal);
         model.addAttribute("status", "update");
         return "mealForm";
@@ -63,7 +66,7 @@ public class JspMealController {
 
     @RequestMapping(value = "meals", method= RequestMethod.POST)
     public String mealFormSubmit(HttpServletRequest request) {
-        int userId = SecurityUtil.authUserId();
+//        int userId = SecurityUtil.authUserId();
 
         String id = request.getParameter("id");
         Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
@@ -72,9 +75,11 @@ public class JspMealController {
                 Integer.parseInt(request.getParameter("calories")));
 
         if (StringUtils.isEmpty(request.getParameter("id"))) {
-            service.create(meal, userId);
+//            service.create(meal, userId);
+            super.create(meal);
         } else {
-            service.update(meal, userId);
+//            service.update(meal, userId);
+            super.update(meal, Integer.valueOf(id));
         }
         return "redirect:/meals";
     }
@@ -88,14 +93,6 @@ public class JspMealController {
         model.addAttribute("meals", getBetween(startDate, startTime, endDate, endTime));
         return "meals";
 
-    }
-
-    public List<MealTo> getBetween(@Nullable LocalDate startDate, @Nullable LocalTime startTime,
-                                   @Nullable LocalDate endDate, @Nullable LocalTime endTime) {
-        int userId = SecurityUtil.authUserId();
-
-        List<Meal> mealsDateFiltered = service.getBetweenDates(startDate, endDate, userId);
-        return MealsUtil.getFilteredTos(mealsDateFiltered, SecurityUtil.authUserCaloriesPerDay(), startTime, endTime);
     }
 
     private int getId(HttpServletRequest request) {
