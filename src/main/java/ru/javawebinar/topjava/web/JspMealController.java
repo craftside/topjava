@@ -1,16 +1,11 @@
 package ru.javawebinar.topjava.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.service.MealService;
-import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +13,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Objects;
 
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
@@ -32,24 +26,18 @@ public class JspMealController extends MealController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String getMeals(Model model) {
-//        int userId = SecurityUtil.authUserId();
-//        model.addAttribute("meals", MealsUtil.getTos(service.getAll(userId), SecurityUtil.authUserCaloriesPerDay()));
         model.addAttribute("meals", super.getAll());
         return "meals";
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public String delete(HttpServletRequest request) {
-//        int userId = SecurityUtil.authUserId();
-//        service.delete(getId(request), userId);
         super.delete(getId(request));
         return "redirect:/meals";
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.GET)
     public String update(HttpServletRequest request, Model model) {
-//        int userId = SecurityUtil.authUserId();
-//        Meal meal = service.get(getId(request), userId);
         Meal meal = super.get(getId(request));
         model.addAttribute("meal", meal);
         model.addAttribute("status", "update");
@@ -66,8 +54,6 @@ public class JspMealController extends MealController {
 
     @RequestMapping(value = "meals", method= RequestMethod.POST)
     public String mealFormSubmit(HttpServletRequest request) {
-//        int userId = SecurityUtil.authUserId();
-
         String id = request.getParameter("id");
         Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
                 LocalDateTime.parse(request.getParameter("dateTime")),
@@ -75,10 +61,8 @@ public class JspMealController extends MealController {
                 Integer.parseInt(request.getParameter("calories")));
 
         if (StringUtils.isEmpty(request.getParameter("id"))) {
-//            service.create(meal, userId);
             super.create(meal);
         } else {
-//            service.update(meal, userId);
             super.update(meal, Integer.valueOf(id));
         }
         return "redirect:/meals";
