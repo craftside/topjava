@@ -5,6 +5,7 @@ import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -15,11 +16,9 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Repository
 @Transactional(readOnly = true)
@@ -84,24 +83,44 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     @Transactional
     public boolean delete(int id) {
+
         return jdbcTemplate.update("DELETE FROM users WHERE id=?", id) != 0;
+    }
+
+    User setRoles (User user) {
+        if (user != null){
+        Collection<Role> roles = jdbcTemplate.query("SELECT role FROM user_roles  WHERE user_id=?",
+                new RowMapper<Role>() {
+                    @Override
+                    public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        return Role.valueOf(rs.getString("role"));
+                    }
+                }, user.getId());
+            user.setRoles(roles);
+        }
+        return user;
+
     }
 
     @Override
     public User get(int id) {
         List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE id=?", ROW_MAPPER, id);
-        return DataAccessUtils.singleResult(users);
+        return setRoles(DataAccessUtils.singleResult(users));
     }
 
     @Override
     public User getByEmail(String email) {
 //        return jdbcTemplate.queryForObject("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
         List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
-        return DataAccessUtils.singleResult(users);
+        return setRoles(DataAccessUtils.singleResult(users));
     }
 
     @Override
     public List<User> getAll() {
-        return jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
+        List<User> users = jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
+        for (User user: users) {
+            user = setRoles(user);
+        }
+        return users;
     }
 }
