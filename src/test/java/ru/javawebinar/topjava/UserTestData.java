@@ -29,6 +29,7 @@ public class UserTestData {
         User updated = new User(USER);
         updated.setName("UpdatedName");
         updated.setCaloriesPerDay(330);
+        updated.setRoles(Collections.singleton(Role.ROLE_ADMIN));
         return updated;
     }
 
