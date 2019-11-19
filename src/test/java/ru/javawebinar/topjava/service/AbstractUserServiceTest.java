@@ -27,14 +27,6 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Autowired
     private CacheManager cacheManager;
 
-    @Autowired
-    private Environment environment;
-
-    private boolean isDataJpaOrJpa() {
-        List<String> profiles = Arrays.asList(environment.getActiveProfiles());
-        return profiles.contains("datajpa") || profiles.contains("jpa");
-    }
-
     @Before
     public void setUp() throws Exception {
         cacheManager.getCache("users").clear();
@@ -43,6 +35,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Test
     public void create() throws Exception {
         User newUser = getNew();
+//        User newUser = getNewWithRoles();
         User created = service.create(newUser);
         Integer newId = created.getId();
         newUser.setId(newId);
@@ -98,7 +91,8 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void createWithException() throws Exception {
-        Assume.assumeTrue(isDataJpaOrJpa());
+//        Assume.assumeTrue(isDataJpaOrJpa());
+        Assume.assumeFalse(isJdbc());
         validateRootCause(() -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Role.ROLE_USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.create(new User(null, "User", "  ", "password", Role.ROLE_USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.create(new User(null, "User", "mail@yandex.ru", "  ", Role.ROLE_USER)), ConstraintViolationException.class);

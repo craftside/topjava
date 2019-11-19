@@ -90,12 +90,7 @@ public class JdbcUserRepository implements UserRepository {
     User setRoles (User user) {
         if (user != null){
         Collection<Role> roles = jdbcTemplate.query("SELECT role FROM user_roles  WHERE user_id=?",
-                new RowMapper<Role>() {
-                    @Override
-                    public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return Role.valueOf(rs.getString("role"));
-                    }
-                }, user.getId());
+                (rs, rowNum) -> Role.valueOf(rs.getString("role")), user.getId());
             user.setRoles(roles);
         }
         return user;
