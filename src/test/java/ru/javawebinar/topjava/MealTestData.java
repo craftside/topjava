@@ -76,4 +76,8 @@ public class MealTestData {
     public static ResultMatcher contentJson(MealTo expected) {
         return result -> assertMatch(readFromJsonMvcResult(result, MealTo.class), expected);
     }
+
+    public static ResultMatcher contentJson(Meal expected) {
+        return result -> assertMatch(readFromJsonMvcResult(result, Meal.class), expected);
+    }
 }
