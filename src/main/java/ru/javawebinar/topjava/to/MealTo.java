@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.to;
 
-import ru.javawebinar.topjava.model.Meal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class MealTo {
     private Integer id;
@@ -22,14 +22,6 @@ public class MealTo {
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
-        this.excess = excess;
-    }
-
-    public MealTo(Meal meal, boolean excess) {
-        this.id = meal.getId();
-        this.dateTime = meal.getDateTime();
-        this.description = meal.getDescription();
-        this.calories = meal.getCalories();
         this.excess = excess;
     }
 
@@ -54,16 +46,19 @@ public class MealTo {
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (other == null) return false;
-        if (other == this) return true;
-        if (!(other instanceof MealTo))return false;
-        MealTo obj = (MealTo) other;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MealTo mealTo = (MealTo) o;
+        return calories == mealTo.calories &&
+                id.equals(mealTo.id) &&
+                dateTime.equals(mealTo.dateTime) &&
+                description.equals(mealTo.description);
+    }
 
-        return  getId().toString().equals(obj.getId().toString()) &&
-                getDateTime().toString().equals(obj.getDateTime().toString()) &&
-                getDescription().equals(obj.getDescription()) &&
-                getCalories() == obj.getCalories();
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, dateTime, description, calories);
     }
 
     @Override

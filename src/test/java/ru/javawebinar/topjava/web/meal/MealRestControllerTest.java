@@ -87,8 +87,15 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MealTestData.contentJson(
-                        new MealTo(MEAL7, true),
-                        new MealTo(MEAL3, false)
+                        new MealTo(MEAL7.getId(),
+                                MEAL7.getDateTime(),
+                                MEAL7.getDescription(), MEAL7.getCalories(),
+                                true),
+                        new MealTo(MEAL3.getId(),
+                                MEAL3.getDateTime(),
+                                MEAL3.getDescription(),
+                                MEAL3.getCalories(),
+                                false)
                 ));
     }
 }
