@@ -32,11 +32,26 @@ $(function () {
             })
         }
     );
-
-    $('#dateTime').datetimepicker(
-        {
-            format: 'Y-m-d\\TH:i',
-            // lang: 'ru'
-        }
-    );
 });
+
+$('#dateTime').datetimepicker(
+    {
+        format: 'Y-m-d\\TH:i',
+    }
+);
+
+function applyFilter() {
+    $.ajax({
+        type: "GET",
+        url: context.ajaxUrl + "filter",
+        data: $('#filter').serialize()
+    }).done(
+        function (data) {
+            context.datatableApi.clear().rows.add(data).draw();
+            successNoty("Filtered");
+        });
+}
+
+function clearFilter() {
+    updateTable();
+}
