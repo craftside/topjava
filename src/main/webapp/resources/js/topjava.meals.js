@@ -41,6 +41,7 @@ $('#dateTime').datetimepicker(
 );
 
 function applyFilter() {
+    isFiltered = true;
     $.ajax({
         type: "GET",
         url: context.ajaxUrl + "filter",
@@ -53,5 +54,10 @@ function applyFilter() {
 }
 
 function clearFilter() {
+    isFiltered = false;
+    $('#startDate').val("");
+    $('#endDate').val("");
+    $('#startTime').val("");
+    $('#endTime').val("");
     updateTable();
 }
