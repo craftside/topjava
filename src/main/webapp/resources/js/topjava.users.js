@@ -1,4 +1,3 @@
-// $(document).ready(function () {
 $(function () {
     makeEditable({
             ajaxUrl: "ajax/admin/users/",
@@ -39,4 +38,28 @@ $(function () {
             })
         }
     );
+});
+
+$(document).ready(function(){
+    $("input:checkbox").change(function() {
+        if($(this).is(":checked")) {
+            $.ajax({
+                url: context.ajaxUrl+"enabled",
+                type: 'GET',
+                data: { userId:$(this).closest('tr').attr('id'), state:"1" }
+            }).done(function () {
+                updateTable();
+                successNoty("Enabled!");
+            });
+        } else {
+            $.ajax({
+                url: context.ajaxUrl+"enabled",
+                type: 'GET',
+                data: { userId:$(this).closest('tr').attr('id'), state:"0" }
+            }).done(function () {
+                updateTable();
+                successNoty("Disabled!");
+            });
+        }
+    });
 });
