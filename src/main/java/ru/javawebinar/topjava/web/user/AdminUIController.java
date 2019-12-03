@@ -39,10 +39,11 @@ public class AdminUIController extends AbstractUserController {
         }
     }
 
+    @Override
     @GetMapping("/enabled")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void updateEnabled(@RequestParam Integer userId,
-                              @RequestParam String state) {
-        service.updateEnabled(userId, state);
+                              @RequestParam Boolean state) {
+        super.updateEnabled(userId, state);
     }
 }

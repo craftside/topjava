@@ -48,4 +48,10 @@ public abstract class AbstractUserController {
         log.info("getByEmail {}", email);
         return service.getByEmail(email);
     }
+
+    public void updateEnabled(Integer userId,
+                              Boolean state) {
+        log.info("updateEnabled {} with id={}", state, userId);
+        service.updateEnabled(userId, state);
+    }
 }
