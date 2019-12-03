@@ -40,26 +40,26 @@ $(function () {
     );
 });
 
-$(document).ready(function(){
-    $("input:checkbox").change(function() {
-        if($(this).is(":checked")) {
-            $.ajax({
-                url: context.ajaxUrl+"enabled",
-                type: 'GET',
-                data: { userId:$(this).closest('tr').attr('id'), state:"1" }
-            }).done(function () {
-                updateTable();
-                successNoty("Enabled!");
-            });
+$(document).ready(function () {
+    $("input:checkbox").change(function () {
+        var isActive;
+        var noty;
+        if ($(this).is(":checked")) {
+            isActive = true;
+            noty = "Enabled!";
         } else {
-            $.ajax({
-                url: context.ajaxUrl+"enabled",
-                type: 'GET',
-                data: { userId:$(this).closest('tr').attr('id'), state:"0" }
-            }).done(function () {
-                updateTable();
-                successNoty("Disabled!");
-            });
+            isActive = false;
+            noty = "Disabled!";
         }
+
+        $.ajax({
+            url: context.ajaxUrl + "enabled",
+            type: 'GET',
+            data: {userId: $(this).closest('tr').attr('id'), state: isActive}
+        }).done(function () {
+            updateTable();
+            successNoty(noty);
+        });
+
     });
 });

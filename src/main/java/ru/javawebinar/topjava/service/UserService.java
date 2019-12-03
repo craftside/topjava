@@ -61,13 +61,9 @@ public class UserService {
 
     @CacheEvict(value = "users", allEntries = true)
     @Transactional
-    public void updateEnabled(Integer id, String state) {
+    public void updateEnabled(Integer id, boolean state) {
         User updatedUser = get(id);
-        if (state.equals("1")) {
-            updatedUser.setEnabled(true);
-        } else {
-            updatedUser.setEnabled(false);
-        }
+        updatedUser.setEnabled(state);
         update(updatedUser);
     }
 }
