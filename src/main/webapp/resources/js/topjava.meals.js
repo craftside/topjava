@@ -62,3 +62,19 @@ $(function () {
         updateTable: updateFilteredTable
     });
 });
+
+$('#dateTime').datetimepicker(
+    {
+        format: 'Y-m-d\\TH:i',
+    }
+);
+
+$('#startDate, #endDate').datetimepicker({
+    timepicker: false,
+    format: 'Y-m-d',
+});
+
+$('#startTime, #endTime').datetimepicker({
+    datepicker: false,
+    format: 'H:i'
+});
