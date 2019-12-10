@@ -56,17 +56,16 @@ public class MealTo extends BaseTo implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MealTo that = (MealTo) o;
-        return calories == that.calories &&
-                excess == that.excess &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(dateTime, that.dateTime) &&
-                Objects.equals(description, that.description);
+        MealTo mealTo = (MealTo) o;
+        return dateTime.equals(mealTo.dateTime) &&
+                description.equals(mealTo.description) &&
+                calories.equals(mealTo.calories) &&
+                Objects.equals(excess, mealTo.excess);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, dateTime, description, calories, excess);
+        return Objects.hash(dateTime, description, calories, excess);
     }
 
     @Override
