@@ -65,7 +65,8 @@ $(function () {
 
 $('#dateTime').datetimepicker(
     {
-        format: 'Y-m-d\\TH:i',
+        // format: 'Y-m-d\\TH:i',
+        format: 'Y-m-d H:i'
     }
 );
 
