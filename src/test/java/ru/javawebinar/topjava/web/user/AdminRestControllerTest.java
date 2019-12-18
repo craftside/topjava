@@ -82,7 +82,6 @@ class AdminRestControllerTest extends AbstractControllerTest {
     @Test
     void update() throws Exception {
         User updated = UserTestData.getUpdated();
-        // todo jsonBody doesnt work
         perform(doPut(USER_ID).jsonUserWithPassword(updated).basicAuth(ADMIN))
                 .andExpect(status().isNoContent());
 
@@ -91,14 +90,14 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
     @Test
     void updateUnprocessableEntity() throws Exception {
-        User updated = UserTestData.getUnValid();
+        User updated = UserTestData.getInvalid();
         perform(doPut(USER_ID).jsonBody(updated).basicAuth(ADMIN))
                 .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
     void createUnprocessableEntity() throws Exception {
-        User newUser = UserTestData.getUnValid();
+        User newUser = UserTestData.getInvalid();
         perform(doPost().jsonBody(newUser).basicAuth(ADMIN))
                 .andExpect(status().isUnprocessableEntity());
 

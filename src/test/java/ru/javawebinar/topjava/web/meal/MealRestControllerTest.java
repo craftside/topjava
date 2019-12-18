@@ -79,7 +79,7 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void updateUnprocessableEntity() throws Exception {
-        Meal updated = MealTestData.getUnValid();
+        Meal updated = MealTestData.getInvalid();
         perform(doPut(MEAL1_ID).jsonBody(updated).basicAuth(USER))
                 .andExpect(status().isUnprocessableEntity());
 
@@ -99,7 +99,7 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void createUnprocessableEntity() throws Exception {
-        Meal newMeal = MealTestData.getUnValid();
+        Meal newMeal = MealTestData.getInvalid();
         perform(doPost().jsonBody(newMeal).basicAuth(USER))
                 .andExpect(status().isUnprocessableEntity());
     }

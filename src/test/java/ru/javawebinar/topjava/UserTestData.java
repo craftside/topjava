@@ -19,7 +19,7 @@ public class UserTestData {
         return new User(null, "New", "new@gmail.com", "newPass", 1555, false, new Date(), Collections.singleton(Role.ROLE_USER));
     }
 
-    public static User getUnValid() {
+    public static User getInvalid() {
         return new User(null, null, null, null, 1555, false, new Date(), Collections.singleton(Role.ROLE_USER));
     }
 

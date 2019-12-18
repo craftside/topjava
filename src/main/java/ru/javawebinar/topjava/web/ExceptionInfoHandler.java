@@ -7,6 +7,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -14,7 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import ru.javawebinar.topjava.util.ValidationUtil;
-import ru.javawebinar.topjava.util.exception.*;
+import ru.javawebinar.topjava.util.exception.ErrorInfo;
+import ru.javawebinar.topjava.util.exception.ErrorType;
+import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
+import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -39,7 +43,7 @@ public class ExceptionInfoHandler {
     }
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
-    @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
+    @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class, IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
     public ErrorInfo illegalRequestDataError(HttpServletRequest req, Exception e) {
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
     }
@@ -50,12 +54,6 @@ public class ExceptionInfoHandler {
         return logAndGetErrorInfo(req, e, true, APP_ERROR);
     }
 
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    @ExceptionHandler(ValidationException.class)
-    public ErrorInfo validationError(HttpServletRequest req, Exception e) {
-        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
-    }
-
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
@@ -64,15 +62,30 @@ public class ExceptionInfoHandler {
         } else {
             log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         }
+
+        if (rootCause instanceof MethodArgumentNotValidException) {
+            return new ErrorInfo(req.getRequestURL(), errorType, getMessage((MethodArgumentNotValidException) rootCause));
+        } else if (rootCause instanceof BindException) {
+            return new ErrorInfo(req.getRequestURL(), errorType, getMessage((BindException) rootCause));
+        } else if (rootCause instanceof NotFoundException) {
+            return new ErrorInfo(req.getRequestURL(), errorType, rootCause.getMessage());
+        }
+
         return new ErrorInfo(req.getRequestURL(), errorType, rootCause.toString());
     }
 
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @Order(Ordered.HIGHEST_PRECEDENCE + 100)
-    public ErrorInfo handleMethodArgumentNotValidException(HttpServletRequest req, Exception e) {
-        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
+    private static String getMessage(MethodArgumentNotValidException rootCause) {
+        StringBuilder sb = new StringBuilder();
+        rootCause.getBindingResult().getFieldErrors().forEach(
+                fieldError -> sb.append(fieldError.getField()).append(" ").append(fieldError.getDefaultMessage()).append("<br>"));
+        return sb.toString();
     }
 
+    private static String getMessage(BindException rootCause) {
+        StringBuilder sb = new StringBuilder();
+        rootCause.getFieldErrors().forEach(
+                fieldError -> sb.append(fieldError.getField()).append(" ").append(fieldError.getDefaultMessage()).append("<br>"));
+        return sb.toString();
+    }
 
 }

@@ -29,7 +29,7 @@ public class MealTestData {
         return new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "Созданный ужин", 300);
     }
 
-    public static Meal getUnValid() {
+    public static Meal getInvalid() {
         return new Meal(null, null, null, null);
     }
 
