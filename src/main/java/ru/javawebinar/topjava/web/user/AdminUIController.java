@@ -1,12 +1,11 @@
 package ru.javawebinar.topjava.web.user;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.UserTo;
-import ru.javawebinar.topjava.util.exception.ValidationException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -36,14 +35,15 @@ public class AdminUIController extends AbstractUserController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void createOrUpdate(@Valid UserTo userTo, BindingResult result) {
-        if (result.hasErrors()) {
-            throw new ValidationException(result);
-        }
-        if (userTo.isNew()) {
-            super.create(userTo);
-        } else {
-            super.update(userTo, userTo.id());
+    public void createOrUpdate(@Valid UserTo userTo) {
+        try {
+            if (userTo.isNew()) {
+                super.create(userTo);
+            } else {
+                super.update(userTo, userTo.id());
+            }
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityViolationException("User with this email already exists");
         }
     }
 
